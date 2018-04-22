@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Course>
+
+<div id="courses" class="section">
+    <div class="container">
+        <h3 class="h3 text-center">Explore Courses</h3>
+        <h6 class="shadow-text text-center">Libris vivendo eloquentiam ex ius, nec id splendide abhorreant.</h6>
+
+        <div class="row mt-3">
+            @foreach(var course in Model)
+            {
+                <div class="col-sm-12 col-md-6 col-lg-3 p-3 d-flex">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="text-center mb-0">@course.Name</h6>
+                        </div>
+
+                        <div class="card-body flex-column">
+                            @course.About
+                        </div>
+                        <div class="card-footer text-center">
+                            Only @(course.Price)$ / Month
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="suggest-course" class="section">
+    <div class="bg-img bg-paralax overlay"></div>
+
+    <div class="container position-relative text-white">
+        <div class="col-md-6">
+            <h2>Suggest course</h2>
+            <p class="lead">You can always suggest new course to us and we will try to provide new lessons.</p>
+
+            <a href="#contact-us" class="btn btn-transparent d-block">Suggest</a>
+        </div>
+    </div>
+</div>

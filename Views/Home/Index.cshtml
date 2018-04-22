@@ -1,0 +1,74 @@
+﻿@model HomeViewModel
+
+@{
+    ViewBag.Title = "Home";
+}
+
+@Html.Partial("Shared/_Header")
+@Html.Partial("Shared/_Courses", Model.Courses)
+@Html.Partial("Shared/_Gallery", Model.Images)
+@Html.Partial("Shared/_GetStarted", Model)
+@Html.Partial("Shared/_ContactUs")
+
+@section Scripts {
+    <script>
+        function onError(err) { alert(err); }
+        function reload() { location.reload(true); }
+
+        var automatedScrolling = false;
+
+        $(document).ready(function () {
+            var topMenu = $('#main-menu'),
+                menuItems = topMenu.find('a[href^="#"]'),
+                scrollItems = menuItems.map(function () {
+                    var item = $($(this).attr('href'));
+                    if (item.length) {
+                        return item;
+                    }
+                });
+
+
+            $(window).scroll(function () {
+                if (automatedScrolling)
+                    return;
+
+                var fromTop = $(this).scrollTop() + topMenu.outerHeight() + 15;
+
+                var cur = scrollItems.map(function () {
+                    if ($(this).offset().top < fromTop)
+                        return this;
+                });
+
+
+                cur = cur[cur.length - 1];
+                var id = cur && cur.length ? cur[0].id : "";
+
+                var menu = $("#main-menu");
+                menu.find(".nav-item").removeClass("active");
+                menu.find("a[href='#" + id + "']").addClass("active");
+            })
+
+
+            var $root = $('html, body');
+
+            $('a[href^="#"]:not(.control)').click(function () {
+                var menu = $("#main-menu");
+                var currentMenuItem = menu.find(".nav-item.active");
+                var self = $(this);
+                var target = self.attr('href');
+
+                automatedScrolling = true;
+                currentMenuItem.removeClass("active");
+                menu.find("a[href='" + target + "']").addClass("active");
+
+                $root.animate({
+                    scrollTop: $(target).offset().top
+                }, 350, function () {
+                    automatedScrolling = false;
+                });
+
+                return false;
+            });
+        })
+    </script>
+}

@@ -1,0 +1,28 @@
+﻿@model HomeViewModel.RegisterViewModel
+
+@using(Ajax.BeginForm("register", "account", new AjaxOptions {
+    HttpMethod = "POST",
+    OnFailure = "onError(error)",
+    OnSuccess = "reload"
+}))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Login, new { @class = "sr-only" })
+        @Html.EditorFor(m => m.Login, new { htmlAttributes = new { @class = "form-control", placeholder = "Email...", id = "register-login" } })
+        @Html.ValidationMessageFor(m => m.Login)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "sr-only" })
+        @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Password...", id = "register-password" } })
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PasswordCheck, new { @class = "sr-only" })
+        @Html.EditorFor(m => m.PasswordCheck, new { htmlAttributes = new { @class = "form-control", placeholder = "Repeat password...", id = "register-password-check" } })
+        @Html.ValidationMessageFor(m => m.PasswordCheck)
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-transparent col-sm-12">Register</button>
+    </div>
+}
+

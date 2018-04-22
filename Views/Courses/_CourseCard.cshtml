@@ -1,0 +1,56 @@
+﻿@model CourseViewModel
+
+<div class="card-wrapper col-sm-12 col-md-6 col-lg-4 col-xl-3 p-3 d-flex" id="course-@Model.Id">
+    @using (Ajax.BeginForm("update", "courses", null,
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            InsertionMode = InsertionMode.ReplaceWith,
+            UpdateTargetId = "course-" + Model.Id
+        }, new
+        {
+            @class = "card p-0 course-card"
+        }))
+    {
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="card-header">
+            <h6 class="card-text text-center m-0 course-title">@Model.Name</h6>
+            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control text-center course-title-edit d-none", placeholder = "Name" } })
+        </div>
+
+        <div class="card-body d-flex flex-column" style="transition: none; min-height: 15vh;">
+            <p class="card-text course-desc">@Model.About</p>
+
+            <div class="textarea-wrapper">
+                @Html.TextAreaFor(m => m.About, new { @class = "course-desc-edit d-none w-100 p-3", placeholder = "Description" })
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="card-text text-center">
+                <span class="text-muted course-price">
+                    <span class="price-value">@Model.Price</span>$ / Month
+                </span>
+
+                @Html.EditorFor(m => m.Price, new { htmlAttributes = new { @class = "form-control text-center course-price-edit d-none", placholder = "Price" } })
+            </div>
+        </div>
+
+        <div class="card-footer p-0">
+            <div class="action-buttons">
+                <a href='@Url.Action("index", "lessons", new { courseId = Model.Id })' class="btn btn-secondary rounded-0 d-block w-100 btn-delete">
+                    Lessons (<span class="lessons-count">@Model.lessons.Count()</span>)
+                </a>
+                <button type="button" class="btn btn-primary rounded-0 d-block w-100 btn-edit">Edit</button>
+            </div>
+            <div class="edit-buttons" style="display: none">
+                <div class="btn-group w-100">
+                    @Html.ActionLink("Delete", "delete", new { id = Model.Id }, new { @class = "btn btn-danger rounded-0 d-block w-100 btn-delete", data_target = "#course-" + Model.Id, data_accept = "false" })
+                    <button type="button" class="btn btn-secondary rounded-0 d-block w-100 btn-cancel">Cancel</button>
+                </div>
+                <button type="submit" class="btn btn-success rounded-0 d-block w-100 btn-save">Save</button>
+            </div>
+        </div>
+    }
+</div>

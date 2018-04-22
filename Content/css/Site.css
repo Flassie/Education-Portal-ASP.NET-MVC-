@@ -1,0 +1,167 @@
+﻿
+
+body * {
+    transition: 0.2s all;
+}
+
+html, body { 
+    margin: 0;
+}
+
+.fixed-navbar.navbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 99;
+    background-color: rgba(53, 53, 53, 0.95);
+    border-bottom: 1px solid rgba(235, 235, 235, 0.25);
+}
+
+.fixed-navbar.navbar * {
+    color: white;
+    font-weight: bold;
+}
+
+.fixed-navbar.navbar *:hover {
+    color: lightgray;
+}
+
+#header {
+    position: relative;
+    height: calc(100vh);
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#header .bg-img {
+    background-image: url("/Content/images/home-background.jpg")
+}
+
+.bg-img.bg-paralax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-img {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-position: center;
+    background-size: cover;
+}
+
+.bg-img.overlay:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#374050), to(#798696));
+    background-image: linear-gradient(to bottom, #374050 0%, #798696 100%);
+    opacity: 0.7;
+}
+
+.header-container {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+}
+
+
+.btn-transparent {
+    background-color: rgba(53, 53, 53, 0.25);
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    color: white;
+    color: white !important;
+}
+
+button.btn-transparent:hover:enabled {
+    background-color: rgba(53, 53, 53, 0.65);
+    color: white;
+}
+
+a.btn-transparent:hover {
+    background-color: rgba(53, 53, 53, 0.65);
+    color: white !important;
+}
+
+.or {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+.section {
+    position: relative;
+    padding: 80px 0;
+}
+
+.shadow-text {
+    color: rgba(0, 0, 0, 0.50)
+}
+
+.course a {
+    position: relative;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.btn-bordered {
+    background-color: transparent;
+    border: 2px solid gray;
+}
+
+.btn-bordered:hover:enabled {
+    background-color: rgba(53, 53, 53, 0.10);
+}
+
+.btn-bordered.btn-more {
+    background-color: rgba(53, 53, 53, 0.15);
+}
+
+.btn-bordered.btn-more:hover {
+    background-color: rgba(53, 53, 53, 0.25);
+}
+
+#suggest-course > .bg-img {
+    background-image: url("/Content/images/cta1-background.jpg")
+}
+
+#get-started > .bg-img {
+    background-image: url("/Content/images/cta2-background.jpg")
+}
+
+#gallery-carousel img {
+    width: 100%;
+    height: auto;
+}
+
+.card { flex-grow: 1; }
+
+.textarea-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.textarea-wrapper textarea {
+    height: 100%;
+    position: absolute;
+    resize: none;
+    white-space: normal;
+    overflow: auto;
+    border: none;
+}
+
+.flex-1 {
+    flex: 1 !important;
+}

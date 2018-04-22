@@ -1,0 +1,31 @@
+﻿@model CourseViewModel
+
+<div class="card-wrapper col-sm-12 col-md-6 col-lg-4 col-xl-3 p-3">
+    @using(Ajax.BeginForm("add", null, new AjaxOptions {
+        OnFailure = "alert(error)",
+        OnSuccess = "newCourseCreated",
+        InsertionMode = InsertionMode.InsertBefore,
+        UpdateTargetId = "courses-list"
+    }, new { @class = "card p-0 border-success", id = "new-course-form" }))
+    {
+        <div class="card-header">
+            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control text-center", placeholder = "Name" } })
+        </div>
+
+        <div class="card-body d-flex flex-column p-0" style="transition: none; min-height: calc(15vh + 5px)">
+            <div class="textarea-wrapper">
+                @Html.TextAreaFor(m => m.About, new { @class = "w-100 p-3", placeholder = "Description" })
+            </div>
+        </div>
+       
+        <div class="card-footer">
+            <div class="card-text text-center">
+                @Html.EditorFor(m => m.Price, new { htmlAttributes = new { @class = "form-control text-center", placeholder = "Price" } })
+            </div>
+        </div>
+        
+        <div class="card-footer p-0">
+            <button type="submit" class="btn btn-success rounded-0 d-block w-100 btn-create">Create</button>
+        </div>
+    }
+</div>

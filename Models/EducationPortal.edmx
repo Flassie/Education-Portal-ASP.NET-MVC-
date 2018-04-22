@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EducationPortal.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="EducationPortalStoreContainer">
+    <EntitySet Name="Accounts" EntityType="EducationPortal.Store.Accounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Images" EntityType="EducationPortal.Store.Images" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Courses" EntityType="EducationPortal.Store.Courses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Lessons" EntityType="EducationPortal.Store.Lessons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Accounts_User" EntityType="EducationPortal.Store.Accounts_User" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Accounts_Admin" EntityType="EducationPortal.Store.Accounts_Admin" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserLesson" EntityType="EducationPortal.Store.UserLesson" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="CourseLesson" Association="EducationPortal.Store.CourseLesson">
+      <End Role="Course" EntitySet="Courses" />
+      <End Role="Lesson" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserLesson_User" Association="EducationPortal.Store.FK_UserLesson_User">
+      <End Role="User" EntitySet="Accounts_User" />
+      <End Role="UserLesson" EntitySet="UserLesson" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserLesson_Lesson" Association="EducationPortal.Store.FK_UserLesson_Lesson">
+      <End Role="Lesson" EntitySet="Lessons" />
+      <End Role="UserLesson" EntitySet="UserLesson" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_inherits_Account" Association="EducationPortal.Store.FK_User_inherits_Account">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="User" EntitySet="Accounts_User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Admin_inherits_Account" Association="EducationPortal.Store.FK_Admin_inherits_Account">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="Admin" EntitySet="Accounts_Admin" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Accounts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreationTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Images">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Courses">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="About" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="CreationTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Lessons">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="VideoLink" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CourseId" Type="int" Nullable="false" />
+    <Property Name="CreationTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Accounts_User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="LastActivity" Type="datetime" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Accounts_Admin">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserLesson">
+    <Key>
+      <PropertyRef Name="FinishedUsers_Id" />
+      <PropertyRef Name="FinishedLessons_Id" />
+    </Key>
+    <Property Name="FinishedUsers_Id" Type="int" Nullable="false" />
+    <Property Name="FinishedLessons_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="CourseLesson">
+    <End Role="Course" Type="EducationPortal.Store.Courses" Multiplicity="1" />
+    <End Role="Lesson" Type="EducationPortal.Store.Lessons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Lesson">
+        <PropertyRef Name="CourseId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLesson_User">
+    <End Role="User" Type="EducationPortal.Store.Accounts_User" Multiplicity="1" />
+    <End Role="UserLesson" Type="EducationPortal.Store.UserLesson" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserLesson">
+        <PropertyRef Name="FinishedUsers_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLesson_Lesson">
+    <End Role="UserLesson" Type="EducationPortal.Store.UserLesson" Multiplicity="*" />
+    <End Role="Lesson" Type="EducationPortal.Store.Lessons" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Lesson">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserLesson">
+        <PropertyRef Name="FinishedLessons_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_inherits_Account">
+    <End Role="Account" Type="EducationPortal.Store.Accounts" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="User" Type="EducationPortal.Store.Accounts_User" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Admin_inherits_Account">
+    <End Role="Account" Type="EducationPortal.Store.Accounts" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Admin" Type="EducationPortal.Store.Accounts_Admin" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Admin">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="EducationPortal" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="EducationPortalContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="EducationPortal.Account" />
+          <EntitySet Name="Images" EntityType="EducationPortal.Image" />
+          <EntitySet Name="Courses" EntityType="EducationPortal.Course" />
+          <EntitySet Name="Lessons" EntityType="EducationPortal.Lesson" />
+          <AssociationSet Name="CourseLesson" Association="EducationPortal.CourseLesson">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Lesson" EntitySet="Lessons" />
+          </AssociationSet>
+          <AssociationSet Name="UserLesson" Association="EducationPortal.UserLesson">
+            <End Role="User" EntitySet="Accounts" />
+            <End Role="Lesson" EntitySet="Lessons" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Account" Abstract="true">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Image">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Admin" BaseType="EducationPortal.Account" />
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="About" Type="String" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Lessons" Relationship="EducationPortal.CourseLesson" FromRole="Course" ToRole="Lesson" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lesson">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="VideoLink" Type="String" Nullable="false" />
+          <NavigationProperty Name="Course" Relationship="EducationPortal.CourseLesson" FromRole="Lesson" ToRole="Course" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FinishedUsers" Relationship="EducationPortal.UserLesson" FromRole="Lesson" ToRole="User" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="CourseLesson">
+          <End Type="EducationPortal.Course" Role="Course" Multiplicity="1" />
+          <End Type="EducationPortal.Lesson" Role="Lesson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Lesson">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User" BaseType="EducationPortal.Account" >
+          <Property Name="LastActivity" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="FinishedLessons" Relationship="EducationPortal.UserLesson" FromRole="User" ToRole="Lesson" />
+        </EntityType>
+        <Association Name="UserLesson">
+          <End Type="EducationPortal.User" Role="User" Multiplicity="*" />
+          <End Type="EducationPortal.Lesson" Role="Lesson" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EducationPortalStoreContainer" CdmEntityContainer="EducationPortalContainer">
+    <EntitySetMapping Name="Accounts">
+      <EntityTypeMapping TypeName="IsTypeOf(EducationPortal.Account)">
+        <MappingFragment StoreEntitySet="Accounts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(EducationPortal.User)">
+        <MappingFragment StoreEntitySet="Accounts_User">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="LastActivity" ColumnName="LastActivity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(EducationPortal.Admin)">
+        <MappingFragment StoreEntitySet="Accounts_Admin">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Images">
+      <EntityTypeMapping TypeName="IsTypeOf(EducationPortal.Image)">
+        <MappingFragment StoreEntitySet="Images">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Courses">
+      <EntityTypeMapping TypeName="IsTypeOf(EducationPortal.Course)">
+        <MappingFragment StoreEntitySet="Courses">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="About" ColumnName="About" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Lessons">
+      <EntityTypeMapping TypeName="IsTypeOf(EducationPortal.Lesson)">
+        <MappingFragment StoreEntitySet="Lessons">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="VideoLink" ColumnName="VideoLink" />
+          <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UserLesson" TypeName="EducationPortal.UserLesson" StoreEntitySet="UserLesson">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="FinishedUsers_Id" />
+      </EndProperty>
+      <EndProperty Name="Lesson">
+        <ScalarProperty Name="Id" ColumnName="FinishedLessons_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

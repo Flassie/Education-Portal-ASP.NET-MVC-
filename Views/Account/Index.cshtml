@@ -1,0 +1,69 @@
+﻿@model AccountViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col-sm-12 text-right text-primary">
+            <div class="h4">
+                Welcome, @Model.Account.Login
+            </div>
+
+            <div class="text-muted small lead">
+                Last Activity: @Model.Account.LastActivity
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-9 mb-5">
+            @Html.Partial("_AccountCoursesList", Model.Courses)
+        </div>
+
+        <div class="col-sm-12 col-lg-3 border-left">
+            <h5 class="text-center">News of the week</h5>
+            <ul class="list-group">
+                @foreach(var historyItem in Model.History.history)
+                {
+                    var date = historyItem.dateTime;
+                    if(historyItem.Type == HistoryViewModel.HistoryItem.HistoryActionType.ACCOUNT_CREATED)
+                    {
+                        var item = historyItem.Item as Account;
+                        <li class="list-group-item list-group-item-success">
+                            @if(item.Login == EducationPortal.Models.Authorization.Login)
+                            {
+                                <span>You've created account</span>
+                            } else
+                            {
+                                <span>Account[@item.Login] created</span>
+                            }
+                            <br />
+                            <span class="text-muted small lead">@date</span>
+                        </li>
+                    } else if(historyItem.Type == HistoryViewModel.HistoryItem.HistoryActionType.COURSE_ADDED)
+                    {
+                        var item = historyItem.Item as Course;
+                        <li class="list-group-item list-group-item-info">
+                            [@item.Name] course created 
+                            <br />
+                            <span class="text-muted small lead">@date</span>
+                        </li>
+                    } else if(historyItem.Type == HistoryViewModel.HistoryItem.HistoryActionType.LESSON_ADDED)
+                    {
+                        var item = historyItem.Item as Lesson;
+                        <li class="list-group-item list-group-item-info">
+                            [@item.Name] lesson was added to [@item.Course.Name] course 
+                            <br />
+                            <span class="text-muted small lead">@date</span>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>

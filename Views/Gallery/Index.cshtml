@@ -1,0 +1,98 @@
+﻿@model IEnumerable<EducationPortal.Models.Image>
+
+@{
+    ViewBag.Title = "Manage Gallery";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container p-3">
+    <div class="m-3 p-0">
+        <form method="post" action="@Url.Action("add", "gallery")" id="gallery-upload">
+            <label for="image-file" class="custom-file-upload btn btn-success col-sm-12">
+                <input type="file" name="image-file" id="image-file" style="display: none" accept=".png,.jpg,.jpeg, image/*" />
+                Add image
+            </label>
+        </form>
+    </div>
+
+    <div class="row" id="gallery-images">
+        @foreach(Image img in Model)
+        {
+            @Html.Partial("_GalleryCard", img)
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function onDeleteClicked(event) {
+            event.preventDefault();
+
+            var self = $(event.target);
+            var url = self.attr("href");
+            var target = $(self.attr("data-target"));
+
+            console.log(url);
+            console.log(target);
+            console.log(self); 
+
+            $.get(url).success(function () {
+                target.remove();
+            }).error(function () {
+                alert("Error happened while removing image");
+                location.reload(true);
+            });
+        }
+
+        $(document).ready(function () {
+            $("a.btn-delete").click(onDeleteClicked);
+        });
+
+        var UploadForm = function () {
+            var galleryImages = $("#gallery-images");
+
+            var form = $("#gallery-upload");
+            var method = form.attr("method");
+            var action = form.attr("action");
+
+            var input = form.find("input[type='file']")[0];
+            
+            this.upload = function() {
+                if (input.files.length < 1)
+                    return;
+                console.log(form[0]);
+
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: action,
+                    type: method,
+                    data: new FormData(form[0]),
+
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+
+                    error: function (e) {
+                        console.log(e);
+                    },
+                    success: function (e) {
+                        var gallery_card = $(e);
+                        
+                        galleryImages.append(gallery_card);
+                        console.log(gallery_card.find("a.btn-delete"));
+                        gallery_card.find("a").click(function (e) {
+                            onDeleteClicked(e);
+                        });
+                    }
+                });
+            }
+        }
+
+        var uploadForm = new UploadForm();
+
+        $("#image-file").change(function () {
+            uploadForm.upload();
+        });
+    </script>
+}

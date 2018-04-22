@@ -1,0 +1,218 @@
+﻿@model CoursesViewModel
+
+@{
+    ViewBag.Title = "Courses";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row m-3">
+        @Html.Partial("_NewCourseCard", Model.NewCourseViewModel)
+    </div>
+    <div class="row m-3" id="courses-list">
+        @foreach(CourseViewModel course in Model.Courses)
+        {
+            @Html.Partial("_CourseCard", course);
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure you want do delete <span id="modal-course-name">HTML</span> course?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure that you want to delete course with <span id="modal-lessons-count">12</span> lessons?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="modal-delete-accept">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var courses = new Courses("#courses-list");
+
+        var deleteModal = {
+            elem: $("#modal-delete"),
+
+            courseName: $("#modal-course-name"),
+            lessonsCount: $("#modal-lessons-count"),
+
+            acceptButton: $("#modal-delete-accept"),
+
+            deleteButton: null
+        }
+
+        deleteModal.acceptButton.click(function (e) {
+            console.log("HELLO");
+            deleteModal.elem.modal("hide");
+
+            if (deleteModal.deleteButton != null) {
+                deleteModal.deleteButton.data("accept", true);
+                deleteModal.deleteButton.click();
+            }
+        });
+
+        function newCourseCreated() {
+            clearNewForm();
+        }
+
+        function clearNewForm() {
+            clear("#new-course-form")
+        }
+
+        function clear(el) {
+            $(el).find("textarea").val("");
+            $(el).find("input[type='text']").val("");
+        }
+
+        function Courses(coursesListSelector) {
+            var coursesList = $(coursesListSelector)
+                .find(".course-card")
+                .map(function (index, item) {
+                    return new Course($(item));
+                });
+
+            var mutationObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (item) {
+                    var addedNode = $(item.addedNodes[0]).find("form.course-card");
+                    addedNode.addClass("border-warning");
+                    coursesList[coursesList.length] = new Course(addedNode);
+                })
+            });
+
+            var observerTarget = document.querySelector(coursesListSelector);
+            mutationObserver.observe(observerTarget, { childList: true });
+        }
+
+        function Course(el) {
+            var elem = $(el);
+
+            this.selector = elem;
+
+            var isEditing = false;
+            var self = this;
+
+            var title = elem.find(".course-title");
+            var titleEdit = elem.find(".course-title-edit");
+
+            var lessonsCount = elem.find(".lessons-count");
+
+            var description = elem.find(".course-desc");
+            var descriptionEdit = elem.find(".course-desc-edit");
+
+            var price = elem.find(".course-price");
+            var priceValue = elem.find(".price-value");
+            var priceEdit = elem.find(".course-price-edit");
+
+            var actionButtons = elem.find(".action-buttons");
+            var editButton = actionButtons.find(".btn-edit");
+
+            var editButtons = elem.find(".edit-buttons");
+            var deleteButton = editButtons.find(".btn-delete");
+            var cancelButton = editButtons.find(".btn-cancel");
+            var saveButton = editButtons.find("button[type='submit']");
+            
+
+            this.showEditableFields = function() {
+                title.addClass("d-none");
+                titleEdit.removeClass("d-none")
+                    .addClass("d-block")
+                    .val(title.text());
+
+                description.addClass("d-none");
+                descriptionEdit.removeClass("d-none")
+                    .val(description.text());
+                descriptionEdit.closest(".card-body").addClass("p-0");
+
+                price.addClass("d-none");
+                priceEdit.removeClass("d-none")
+                    .addClass("d-block")
+                    .val(priceValue.text());
+
+                actionButtons.hide();
+                editButtons.show();
+            }
+
+            this.hideEditableFields = function() {
+                title.removeClass("d-none");
+                titleEdit.removeClass("d-block")
+                    .addClass("d-none")
+                    .val(title.text());
+
+                description.removeClass("d-none");
+                descriptionEdit.removeClass("d-block")
+                    .addClass("d-none")
+                    .val(description.text());
+                descriptionEdit.closest(".card-body").removeClass("p-0");
+
+                price.removeClass("d-none");
+                priceEdit.removeClass("d-block")
+                    .addClass("d-none")
+                    .val(priceValue.text());
+
+                actionButtons.show();
+                editButtons.hide();
+            }
+            
+            editButton.click(function () {
+                isEditing = true;
+                self.showEditableFields();
+            });
+
+            cancelButton.click(function () {
+                isEditing = false;
+                self.hideEditableFields();
+            });
+
+            deleteButton.click(function (e) {
+                e.preventDefault();
+                isEditing = false;
+
+                var self = $(this);
+                var url = self.attr("href");
+                var target = self.attr("data-target");
+
+                var accept = self.data("accept");
+
+                if (accept == false) {
+                    deleteModal.courseName.text(title.text());
+                    deleteModal.lessonsCount.text(lessonsCount.text());
+                    deleteModal.deleteButton = deleteButton;
+                    deleteModal.elem.modal("show");
+                } else {
+                    $.get(url)
+                        .done(function () { $(target).remove(); })
+                        .fail(function () {
+                            alert("Error while deleting course");
+                            location.reload(true);
+                        });
+                }
+            })
+
+            saveButton.click(function (e) {
+                e.preventDefault();
+                isEditing = false;
+
+                var titlesEq = title.text() == titleEdit.val();
+                var descsEq = description.text() == descriptionEdit.val();
+                var pricesEq = price.text() == priceEdit.val();
+
+                if (!titlesEq || !descsEq || !pricesEq) {
+                    $(this).closest("form").submit();
+                } else {
+                    self.hideEditableFields();
+                }
+            });
+        }
+    </script>
+}

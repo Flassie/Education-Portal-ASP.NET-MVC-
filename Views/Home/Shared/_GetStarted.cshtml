@@ -1,0 +1,25 @@
+﻿@model HomeViewModel
+
+<div id="get-started" class="section">
+    <div class="bg-img bg-paralax overlay"></div>
+    <div class="container position-relative text-white">
+        <h3 class="text-center">Start now and check everything from inside</h3>
+
+        <br />
+        <div class="row text-center">
+            <div class="col-sm-12 col-md-12 col-lg-5">
+                <h5>Sign In</h5>
+
+                <br />
+                @Html.Partial("Shared/_SignIn", Model.signInViewModel)
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-5 offset-lg-2">
+                <h5>Register</h5>
+
+                <br />
+                @Html.Partial("Shared/_Register", Model.registerViewModel)
+            </div>
+        </div>
+    </div>
+</div>

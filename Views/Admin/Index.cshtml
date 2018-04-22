@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 p-3 d-flex">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-text text-center m-0">Gallery</h6>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text" style="flex: 1">Add/Remove gallery images</p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-text text-center">
+                        @Html.ActionLink("Manage", "gallery", null, new { @class = "btn btn-primary d-block" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-4 p-3 d-flex">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-text text-center m-0">Courses</h6>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Add/Edit/Remove courses and manage lessons</p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-text text-center">
+                        @Html.ActionLink("Manage", "courses", null, new { @class = "btn btn-primary d-block" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-4 p-3 d-flex">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-text text-center m-0">Lessons</h6>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Add/Edit/Remove lessons and manage students</p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-text text-center">
+                        @Html.ActionLink("Manage", "lessons", null, new { @class = "btn btn-primary d-block" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

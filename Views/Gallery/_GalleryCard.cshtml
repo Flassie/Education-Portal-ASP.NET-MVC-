@@ -1,0 +1,16 @@
+﻿@model Image
+
+<div class="col-sm-12 col-md-4 col-lg-3" id="img-@Model.Id">
+    <div class="card m-1">
+        <img class="card-img-top" src="~/Content/images/gallery/@Model.FileName" />
+
+        <div class="card-footer">
+            @Html.ActionLink("Delete", "delete", "gallery", 
+                new { id = Model.Id }, 
+                new { @class = "btn btn-sm btn-danger d-block btn-delete", data_target = "#img-" + Model.Id })
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">Last modified: @Model.LastModified.ToShortDateString()</small>
+        </div>
+    </div>
+</div>

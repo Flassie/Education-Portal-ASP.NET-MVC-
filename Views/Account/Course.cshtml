@@ -1,0 +1,39 @@
+﻿@model CourseViewModel
+
+@{
+    var isError = ViewBag.IsError == null ? false : ViewBag.IsError;
+
+    if(isError)
+    {
+        ViewBag.Title = "Error " + ViewBag.ErrorMsg;
+    } else
+    {
+        ViewBag.Title = Model.Name;
+    }
+
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+@if(isError)
+{
+    <div class="h2 text-danger m-5 text-center">Error: @ViewBag.ErrorMsg</div>
+} else {
+    <div class="container">
+        <div class="row">
+            <h3 class="text-center col-sm-12 mt-3">@Model.Name</h3>
+
+            @if(Model.lessons.Count() == 0)
+            {
+                <div class="h5 text-center text-danger col-sm-12 mt-2">
+                    There is still no lessons
+                </div>
+            } else
+            {
+                foreach(var lesson in Model.lessons)
+                {
+                    @Html.Partial("_lesson", lesson)
+                }
+            }
+        </div>
+    </div>
+}

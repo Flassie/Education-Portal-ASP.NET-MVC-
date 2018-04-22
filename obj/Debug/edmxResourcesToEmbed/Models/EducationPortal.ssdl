@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EducationPortal.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="EducationPortalStoreContainer">
+    <EntitySet Name="Accounts" EntityType="EducationPortal.Store.Accounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Images" EntityType="EducationPortal.Store.Images" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Courses" EntityType="EducationPortal.Store.Courses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Lessons" EntityType="EducationPortal.Store.Lessons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Accounts_User" EntityType="EducationPortal.Store.Accounts_User" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Accounts_Admin" EntityType="EducationPortal.Store.Accounts_Admin" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserLesson" EntityType="EducationPortal.Store.UserLesson" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="CourseLesson" Association="EducationPortal.Store.CourseLesson">
+      <End Role="Course" EntitySet="Courses" />
+      <End Role="Lesson" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserLesson_User" Association="EducationPortal.Store.FK_UserLesson_User">
+      <End Role="User" EntitySet="Accounts_User" />
+      <End Role="UserLesson" EntitySet="UserLesson" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserLesson_Lesson" Association="EducationPortal.Store.FK_UserLesson_Lesson">
+      <End Role="Lesson" EntitySet="Lessons" />
+      <End Role="UserLesson" EntitySet="UserLesson" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_inherits_Account" Association="EducationPortal.Store.FK_User_inherits_Account">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="User" EntitySet="Accounts_User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Admin_inherits_Account" Association="EducationPortal.Store.FK_Admin_inherits_Account">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="Admin" EntitySet="Accounts_Admin" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Accounts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreationTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Images">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Courses">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="About" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="CreationTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Lessons">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="VideoLink" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CourseId" Type="int" Nullable="false" />
+    <Property Name="CreationTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Accounts_User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="LastActivity" Type="datetime" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Accounts_Admin">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserLesson">
+    <Key>
+      <PropertyRef Name="FinishedUsers_Id" />
+      <PropertyRef Name="FinishedLessons_Id" />
+    </Key>
+    <Property Name="FinishedUsers_Id" Type="int" Nullable="false" />
+    <Property Name="FinishedLessons_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="CourseLesson">
+    <End Role="Course" Type="EducationPortal.Store.Courses" Multiplicity="1" />
+    <End Role="Lesson" Type="EducationPortal.Store.Lessons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Lesson">
+        <PropertyRef Name="CourseId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLesson_User">
+    <End Role="User" Type="EducationPortal.Store.Accounts_User" Multiplicity="1" />
+    <End Role="UserLesson" Type="EducationPortal.Store.UserLesson" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserLesson">
+        <PropertyRef Name="FinishedUsers_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLesson_Lesson">
+    <End Role="UserLesson" Type="EducationPortal.Store.UserLesson" Multiplicity="*" />
+    <End Role="Lesson" Type="EducationPortal.Store.Lessons" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Lesson">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserLesson">
+        <PropertyRef Name="FinishedLessons_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_inherits_Account">
+    <End Role="Account" Type="EducationPortal.Store.Accounts" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="User" Type="EducationPortal.Store.Accounts_User" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Admin_inherits_Account">
+    <End Role="Account" Type="EducationPortal.Store.Accounts" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Admin" Type="EducationPortal.Store.Accounts_Admin" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Admin">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

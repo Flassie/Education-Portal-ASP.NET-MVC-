@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="EducationPortal" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="EducationPortalContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Accounts" EntityType="EducationPortal.Account" />
+    <EntitySet Name="Images" EntityType="EducationPortal.Image" />
+    <EntitySet Name="Courses" EntityType="EducationPortal.Course" />
+    <EntitySet Name="Lessons" EntityType="EducationPortal.Lesson" />
+    <AssociationSet Name="CourseLesson" Association="EducationPortal.CourseLesson">
+      <End Role="Course" EntitySet="Courses" />
+      <End Role="Lesson" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="UserLesson" Association="EducationPortal.UserLesson">
+      <End Role="User" EntitySet="Accounts" />
+      <End Role="Lesson" EntitySet="Lessons" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Account" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Login" Type="String" Nullable="false" />
+    <Property Name="Password" Type="String" Nullable="false" />
+    <Property Name="CreationTime" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Image">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FileName" Type="String" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Admin" BaseType="EducationPortal.Account" />
+  <EntityType Name="Course">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="About" Type="String" Nullable="false" />
+    <Property Name="Price" Type="Double" Nullable="false" />
+    <NavigationProperty Name="Lessons" Relationship="EducationPortal.CourseLesson" FromRole="Course" ToRole="Lesson" />
+    <Property Name="CreationTime" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Lesson">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="VideoLink" Type="String" Nullable="false" />
+    <NavigationProperty Name="Course" Relationship="EducationPortal.CourseLesson" FromRole="Lesson" ToRole="Course" />
+    <Property Name="CourseId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="FinishedUsers" Relationship="EducationPortal.UserLesson" FromRole="Lesson" ToRole="User" />
+    <Property Name="CreationTime" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <Association Name="CourseLesson">
+    <End Type="EducationPortal.Course" Role="Course" Multiplicity="1" />
+    <End Type="EducationPortal.Lesson" Role="Lesson" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Lesson">
+        <PropertyRef Name="CourseId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="User" BaseType="EducationPortal.Account">
+    <Property Name="LastActivity" Type="DateTime" Nullable="false" />
+    <NavigationProperty Name="FinishedLessons" Relationship="EducationPortal.UserLesson" FromRole="User" ToRole="Lesson" />
+  </EntityType>
+  <Association Name="UserLesson">
+    <End Type="EducationPortal.User" Role="User" Multiplicity="*" />
+    <End Type="EducationPortal.Lesson" Role="Lesson" Multiplicity="*" />
+  </Association>
+</Schema>

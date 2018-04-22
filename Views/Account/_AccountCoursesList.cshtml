@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CourseViewModel>
+
+<div class="mt-4">
+    <div class="border rounded w-100 p-3">
+        <h5 class="text-center">Courses</h5>
+
+        <div class="container">
+            <div class="row">
+                @{ 
+                    var courses = Model
+                        .OrderBy(m => m.lessons.Count(lesson => lesson.IsWatched))
+                        .OrderByDescending(m => m.lessons.Count());
+                }
+
+                @foreach(var course in courses)
+                {
+                    var watchedLessons = course.lessons.Count(m => m.IsWatched);
+                    var totalLessons = course.lessons.Count();
+
+                    var courseUrl = Url.Action("course", new { id = course.Id });
+
+                    <div class="col-sm-12 col-md-6 col-lg-4 p-1 d-flex">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="text-center mb-0">@course.Name</h6>
+                            </div>
+
+                            <div class="card-body flex-column">
+                                @course.About
+                            </div>
+
+                            <div class="card-footer">
+                                Lessons: @watchedLessons / @totalLessons
+                            </div>
+
+                            <div class="card-footer p-0">
+                                @if(watchedLessons != 0)
+                                {
+                                    <a href="@courseUrl" class="btn btn-primary rounded-0 w-100">Continue learning</a>
+                                } else
+                                {
+                                    <a href="@courseUrl" class="btn btn-primary rounded-0 w-100">Start learning</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
